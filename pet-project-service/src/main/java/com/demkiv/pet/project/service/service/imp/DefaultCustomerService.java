@@ -13,9 +13,9 @@ import java.util.UUID;
 
 @Service("customerService")
 public class DefaultCustomerService implements CustomService {
+    @Autowired
     private final CustomerRepository customerRepository;
 
-    @Autowired
     public DefaultCustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }

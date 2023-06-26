@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AddPersonDataController {
     private PetProjectTaskService service;
 
-    @PostMapping(value = "/add/person",
+    @PostMapping(value = "api/add/person",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<String> processPersonData(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
                                              @RequestBody PersonModel personData) {
-        log.debug(token);
+        log.debug("From Controller token" + token);
         return service.getConvertedPersonDataFromApi(personData);
     }
 }
