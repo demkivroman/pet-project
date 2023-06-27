@@ -1,20 +1,22 @@
 package com.demkiv.pet.project.service.security;
 
+import com.demkiv.pet.project.service.entity.User;
+import com.demkiv.pet.project.service.entity.UserDetail;
+import com.demkiv.pet.project.service.service.CustomService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.log4j.Log4j;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -22,31 +24,28 @@ import java.util.Optional;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j
-public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-    AuthenticationFilter(final RequestMatcher requiresAuth) {
-        super(requiresAuth);
-    }
+@AllArgsConstructor
+@Component
+public class AuthenticationFilter extends OncePerRequestFilter {
+    private CustomService service;
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        log.debug("From filter Demkiv Roman");
         Optional<String> tokenParam = Optional.ofNullable(request.getHeader(AUTHORIZATION));
-        System.out.println("Demkiv Roman");
-        log.info("From filter Demkiv Roman");
-        String token = StringUtils.EMPTY;
-        if (tokenParam.isPresent()) {
-            log.info("From filter Demkiv Roman");
+        if (tokenParam.isPresent() && SecurityContextHolder.getContext().getAuthentication() == null) {
+            String token = StringUtils.removeStart(tokenParam.get(), "Bearer").trim();
             log.debug("token:  " + token);
-            token = StringUtils.removeStart(tokenParam.get(), "Bearer").trim();
+            UserDetails foundUser = service.getUserDetails(token);
+            if (foundUser != null) {
+                SecurityContext context = SecurityContextHolder.createEmptyContext();
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(foundUser, null, null);
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                context.setAuthentication(authToken);
+                SecurityContextHolder.setContext(context);
+            }
         }
-
-        Authentication requestAuthentication = new UsernamePasswordAuthenticationToken(token, token);
-        return getAuthenticationManager().authenticate(requestAuthentication);
-    }
-
-    @Override
-    protected void successfulAuthentication(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain, final Authentication authResult)
-            throws IOException, ServletException {
-        SecurityContextHolder.getContext().setAuthentication(authResult);
-        chain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 }

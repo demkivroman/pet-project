@@ -3,11 +3,10 @@ package com.demkiv.pet.project.service.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@ToString
 @Entity
 @Table(name = "user")
 public class User {

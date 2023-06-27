@@ -1,11 +1,16 @@
 package com.demkiv.pet.project.service.service.imp;
 
 import com.demkiv.pet.project.service.entity.User;
+import com.demkiv.pet.project.service.entity.UserDetail;
 import com.demkiv.pet.project.service.repository.CustomerRepository;
 import com.demkiv.pet.project.service.service.CustomService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -35,16 +40,21 @@ public class DefaultCustomerService implements CustomService {
     }
 
     @Override
-    public Optional<org.springframework.security.core.userdetails.User> findByToken(String token) {
-        Optional<User> user = customerRepository.findByToken(token);
-        if (user.isPresent()) {
-            User customUser = user.get();
-            org.springframework.security.core.userdetails.User securityUser = new org.springframework.security.core.userdetails.User(
-              customUser.getName(), customUser.getPassword(), true, true, true, true,
-                    AuthorityUtils.createAuthorityList("USER"));
-            return Optional.of(securityUser);
-        }
+    public Optional<User> findByToken(String token) {
+        return customerRepository.findByToken(token);
+    }
 
-        return Optional.empty();
+    @Override
+    public UserDetails getUserDetails(String token) {
+        User user = Optional.ofNullable(token)
+                .map(customerRepository::findByToken)
+                .get()
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return UserDetail.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .password(user.getPassword())
+                .token(user.getToken())
+                .build();
     }
 }

@@ -23,7 +23,6 @@ public class AddPersonDataController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<String> processPersonData(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
                                              @RequestBody PersonModel personData) {
-        log.debug("From Controller token" + token);
         return service.getConvertedPersonDataFromApi(personData);
     }
 }
