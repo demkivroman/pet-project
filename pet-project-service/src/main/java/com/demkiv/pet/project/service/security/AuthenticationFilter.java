@@ -1,7 +1,5 @@
 package com.demkiv.pet.project.service.security;
 
-import com.demkiv.pet.project.service.entity.User;
-import com.demkiv.pet.project.service.entity.UserDetail;
 import com.demkiv.pet.project.service.service.CustomService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
