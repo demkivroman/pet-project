@@ -6,10 +6,7 @@ import com.demkiv.pet.project.service.repository.CustomerRepository;
 import com.demkiv.pet.project.service.service.CustomService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +24,7 @@ public class DefaultCustomerService implements CustomService {
 
     @Override
     public String login(String username, String password) {
-        Optional<User> user = customerRepository.login(username, password);
+        Optional<User> user = customerRepository.findByNameAndPassword(username, password);
         if (user.isPresent()) {
             String token = UUID.randomUUID().toString();
             User customUser = user.get();

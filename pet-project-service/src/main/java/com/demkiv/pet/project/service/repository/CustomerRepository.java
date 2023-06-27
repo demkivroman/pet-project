@@ -11,5 +11,6 @@ import java.util.Optional;
 public interface CustomerRepository extends CrudRepository<User, Long> {
     @Query(value = "SELECT u FROM User u where u.name = ?1 and u.password = ?2 ")
     Optional<User> login(String username, String password);
+    Optional<User> findByNameAndPassword(String username, String password);
     Optional<User> findByToken(String token);
 }

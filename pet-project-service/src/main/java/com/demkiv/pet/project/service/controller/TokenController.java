@@ -17,7 +17,7 @@ public class TokenController {
     @PostMapping("/token")
     public String getToken(@RequestParam("username") final String username,
                            @RequestParam("password") final String password) {
-        log.debug("===== HELLO from TokenController ==========");
+        log.debug("===== FROM TokenController ==========");
         String token = service.login(username, password);
         if (StringUtils.isEmpty(token)) {
             return "no token found";
