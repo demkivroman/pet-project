@@ -6,6 +6,8 @@ import com.demkiv.pet.project.service.entity.security.User;
 import com.demkiv.pet.project.service.entity.security.UserDetail;
 import com.demkiv.pet.project.service.repository.security.UserRepository;
 import com.demkiv.pet.project.service.service.security.CustomService;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,7 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Slf4j
 @Service("customerService")
+@Transactional
 public class DefaultCustomerService implements CustomService {
     @Autowired
     private final UserRepository userRepository;
@@ -45,11 +49,7 @@ public class DefaultCustomerService implements CustomService {
     }
 
     @Override
-    public UserDetails getUserDetails(String token) {
-        User user = Optional.ofNullable(token)
-                .map(userRepository::findByToken)
-                .get()
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public UserDetails getUserDetails(User user) {
         return UserDetail.builder()
                 .id(user.getId())
                 .name(user.getName())
@@ -59,12 +59,7 @@ public class DefaultCustomerService implements CustomService {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities(String token) {
-        User user = Optional.ofNullable(token)
-                .map(userRepository::findByToken)
-                .get()
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
+    public Collection<? extends GrantedAuthority> getAuthorities(User user) {
         return getGrantedAuthorities(getPrivileges(user.getRoles()));
     }
 

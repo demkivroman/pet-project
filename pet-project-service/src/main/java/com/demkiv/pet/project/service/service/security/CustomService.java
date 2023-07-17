@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface CustomService {
     String login(String username, String password);
     Optional<User> findByToken(String token);
-    UserDetails getUserDetails(String token);
-    Collection<? extends GrantedAuthority> getAuthorities(String token);
+    UserDetails getUserDetails(User user);
+    Collection<? extends GrantedAuthority> getAuthorities(User user);
 }

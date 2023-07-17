@@ -21,7 +21,7 @@ public class User {
     @Column(name = "token")
     private String token;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST})
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(
