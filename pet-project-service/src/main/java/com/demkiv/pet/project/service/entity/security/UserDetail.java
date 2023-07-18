@@ -1,4 +1,4 @@
-package com.demkiv.pet.project.service.entity;
+package com.demkiv.pet.project.service.entity.security;
 
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +20,7 @@ public class UserDetail implements UserDetails  {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority(role.getName()));
     }
 
     @Override

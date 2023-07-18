@@ -1,6 +1,6 @@
 package com.demkiv.pet.project.service.controller;
 
-import com.demkiv.pet.project.service.service.CustomService;
+import com.demkiv.pet.project.service.service.security.CustomService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

@@ -1,6 +1,7 @@
 package com.demkiv.pet.project.service.security;
 
-import com.demkiv.pet.project.service.service.CustomService;
+import com.demkiv.pet.project.service.entity.security.User;
+import com.demkiv.pet.project.service.service.security.CustomService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,15 +31,17 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        log.debug("From filter Demkiv Roman");
         Optional<String> tokenParam = Optional.ofNullable(request.getHeader(AUTHORIZATION));
         if (tokenParam.isPresent() && SecurityContextHolder.getContext().getAuthentication() == null) {
             String token = StringUtils.removeStart(tokenParam.get(), "Bearer").trim();
-            log.debug("token:  " + token);
-            UserDetails foundUser = service.getUserDetails(token);
-            if (foundUser != null) {
+            Optional<User> foundUser = service.findByToken(token);
+            if (foundUser.isPresent()) {
+                log.debug("==== USER AUTHORITIES ====");
+                UserDetails userDetails = service.getUserDetails(foundUser.get());
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(foundUser, null, null);
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null,
+                        service.getAuthorities(foundUser.get()));
+                log.debug(authToken.getAuthorities().toString());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 context.setAuthentication(authToken);
                 SecurityContextHolder.setContext(context);
