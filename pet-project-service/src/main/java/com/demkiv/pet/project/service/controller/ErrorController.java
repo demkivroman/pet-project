@@ -15,9 +15,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @ControllerAdvice
 public class ErrorController extends ResponseEntityExceptionHandler {
@@ -38,7 +36,7 @@ public class ErrorController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {AuthenticationException.class})
     protected ResponseEntity<Object> userNotFoundException(RuntimeException ex, WebRequest request) {
-        return handleExceptionInternal(ex, "Authentication failed", new HttpHeaders(), HttpStatus.NON_AUTHORITATIVE_INFORMATION, request);
+        return handleExceptionInternal(ex, "Authentication failed", new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
     @ExceptionHandler(value = {PetProjectServiceException.class})
