@@ -3,6 +3,7 @@ package com.demkiv.pet.project.service.service.pet.impl;
 import com.demkiv.pet.project.service.entity.pet.Employee;
 import com.demkiv.pet.project.service.repository.pet.EmployeeRepository;
 import com.demkiv.pet.project.service.service.pet.EmployeeService;
+import com.demkiv.pet.project.service.util.PetProjectServiceException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void deleteEmployee(String id) {
-        repository.deleteById(id);
+        Optional<Employee> foundEmployee = repository.findById(id);
+        if (foundEmployee.isPresent()) {
+            repository.delete(foundEmployee.get());
+        } else {
+            throw new PetProjectServiceException(String.format("User with ID %s is not present in database.", id));
+        }
     }
 
     @Override

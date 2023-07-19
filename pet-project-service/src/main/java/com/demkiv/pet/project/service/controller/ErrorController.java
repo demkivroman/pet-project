@@ -1,5 +1,6 @@
 package com.demkiv.pet.project.service.controller;
 
+import com.demkiv.pet.project.service.util.PetProjectServiceException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -38,5 +39,10 @@ public class ErrorController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {AuthenticationException.class})
     protected ResponseEntity<Object> userNotFoundException(RuntimeException ex, WebRequest request) {
         return handleExceptionInternal(ex, "Authentication failed", new HttpHeaders(), HttpStatus.NON_AUTHORITATIVE_INFORMATION, request);
+    }
+
+    @ExceptionHandler(value = {PetProjectServiceException.class})
+    protected ResponseEntity<Object> petProjectServiceException(RuntimeException exception, WebRequest request) {
+       return handleExceptionInternal(exception, exception.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 }

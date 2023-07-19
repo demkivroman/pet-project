@@ -2,8 +2,8 @@ package com.demkiv.pet.project.service.util;
 
 import org.springframework.security.core.AuthenticationException;
 
-public class SecurityServiceException extends AuthenticationException {
-    public SecurityServiceException(String msg) {
+public class PetProjectServiceException extends AuthenticationException {
+    public PetProjectServiceException(String msg) {
         super(msg);
     }
 

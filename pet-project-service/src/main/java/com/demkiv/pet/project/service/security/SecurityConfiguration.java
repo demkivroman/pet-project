@@ -2,7 +2,7 @@ package com.demkiv.pet.project.service.security;
 
 import com.demkiv.pet.project.service.entity.security.User;
 import com.demkiv.pet.project.service.service.security.CustomService;
-import com.demkiv.pet.project.service.util.SecurityServiceException;
+import com.demkiv.pet.project.service.util.PetProjectServiceException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -62,11 +62,13 @@ public class SecurityConfiguration {
 
     }
 
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
-//            throws Exception {
-//        return config.getAuthenticationManager();
-//    }
+    @Bean
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(authenticationProvider());
+        return authenticationManagerBuilder.build();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -82,7 +84,7 @@ public class SecurityConfiguration {
             if (foundUser.isPresent()) {
                 return customService.getUserDetails(foundUser.get());
             } else {
-                throw new SecurityServiceException("User is not found");
+                throw new PetProjectServiceException("User is not found");
             }
         });
         authProvider.setPasswordEncoder(passwordEncoder());
