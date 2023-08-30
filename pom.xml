@@ -28,6 +28,7 @@
         <doc-open-ui.version>2.0.0</doc-open-ui.version>
         <jakson.version>2.13.4</jakson.version>
         <spring.security>3.0.5</spring.security>
+        <spring.jjwt>0.11.5</spring.jjwt>
     </properties>
 
     <dependencies>
