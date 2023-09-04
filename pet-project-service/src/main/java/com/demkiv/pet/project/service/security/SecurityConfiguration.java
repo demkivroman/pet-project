@@ -1,6 +1,7 @@
 package com.demkiv.pet.project.service.security;
 
 import com.demkiv.pet.project.service.entity.security.User;
+import com.demkiv.pet.project.service.repository.security.UserRepository;
 import com.demkiv.pet.project.service.service.security.CustomService;
 import com.demkiv.pet.project.service.util.PetProjectServiceException;
 import jakarta.transaction.Transactional;
@@ -16,6 +17,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -29,6 +32,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class SecurityConfiguration {
 
+    private UserRepository repository;
     private CustomService customService;
     private AuthenticationFilter filter;
 
@@ -60,6 +64,12 @@ public class SecurityConfiguration {
                 .disable()
                 .build();
 
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return username -> repository.findByName(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found."));
     }
 
     @Bean
