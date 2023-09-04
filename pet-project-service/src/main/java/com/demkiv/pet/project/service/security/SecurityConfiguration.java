@@ -1,9 +1,7 @@
 package com.demkiv.pet.project.service.security;
 
-import com.demkiv.pet.project.service.entity.security.User;
 import com.demkiv.pet.project.service.repository.security.UserRepository;
 import com.demkiv.pet.project.service.service.security.CustomService;
-import com.demkiv.pet.project.service.util.PetProjectServiceException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,8 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.util.Optional;
-
 @Configuration
 @EnableWebSecurity
 @ComponentScan("com.demkiv.pet.project.service.security")
@@ -34,7 +31,7 @@ public class SecurityConfiguration {
 
     private UserRepository repository;
     private CustomService customService;
-    private AuthenticationFilter filter;
+    private JwtAuthenticationFilter filter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -73,11 +70,8 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder =
-                http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.authenticationProvider(authenticationProvider());
-        return authenticationManagerBuilder.build();
+    public AuthenticationManager authManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
@@ -89,14 +83,7 @@ public class SecurityConfiguration {
     @Transactional
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(token -> {
-            Optional<User> foundUser = customService.findByToken(token);
-            if (foundUser.isPresent()) {
-                return customService.getUserDetails(foundUser.get());
-            } else {
-                throw new PetProjectServiceException("User is not found");
-            }
-        });
+        authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
