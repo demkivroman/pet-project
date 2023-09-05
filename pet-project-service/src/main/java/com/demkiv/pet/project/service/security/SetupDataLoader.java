@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.List;
 
 @Slf4j
-@Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent>, AuthorityInterface {
     boolean alreadySetup = false;
     private UserRepository userRepository;

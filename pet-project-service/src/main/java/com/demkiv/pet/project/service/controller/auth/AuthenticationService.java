@@ -1,5 +1,6 @@
 package com.demkiv.pet.project.service.controller.auth;
 
+import com.demkiv.pet.project.service.controller.auth.model.RegisterRequest;
 import com.demkiv.pet.project.service.repository.security.UserRepository;
 import com.demkiv.pet.project.service.security.JwtService;
 import lombok.RequiredArgsConstructor;

@@ -1,5 +1,6 @@
 package com.demkiv.pet.project.service.controller.auth;
 
+import com.demkiv.pet.project.service.controller.auth.model.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
+        System.out.println(request);
         return ResponseEntity.ok(service.register(request));
     }
 
