@@ -3,6 +3,8 @@ package com.demkiv.pet.project.service.controller.auth.model;
 
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -12,5 +14,5 @@ public class RegisterRequest {
     private String name;
     private String password;
     private Role roles;
-    private Privilege privileges;
+    private List<Privilege> privileges;
 }

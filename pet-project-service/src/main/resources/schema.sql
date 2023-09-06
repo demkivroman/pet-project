@@ -1,9 +1,9 @@
-drop table EMPLOYEE;
-drop table USERS_ROLES;
-drop table ROLES_PRIVILEGES;
-drop table PRIVILEGE;
-drop table role;
-drop table user;
+-- drop table EMPLOYEE;
+-- drop table USERS_ROLES;
+-- drop table ROLES_PRIVILEGES;
+-- drop table PRIVILEGE;
+-- drop table role;
+-- drop table _USER;
 
 create table if not exists EMPLOYEE (
     ID varchar(100) not null,
@@ -17,8 +17,8 @@ create table if not exists EMPLOYEE (
     PRIMARY KEY ( ID )
 );
 
-create table if not exists User (
-    ID INT not null auto_increment,
+create table if not exists USER (
+    ID int not null auto_increment,
     name varchar(200) not null,
     password varchar(200) not null,
     token varchar(100),
@@ -27,7 +27,7 @@ create table if not exists User (
 );
 
 create table if not exists ROLE (
-    ID INT not null auto_increment,
+    ID int not null auto_increment,
     name varchar(100) not null,
     primary key(id)
 );
@@ -39,7 +39,7 @@ create table if not exists PRIVILEGE (
 );
 
 create table if not exists USERS_ROLES (
-    ID INT not null auto_increment,
+    ID int not null auto_increment,
     USER_ID int not null,
     ROLE_ID int not null,
     primary key(id),
@@ -49,7 +49,7 @@ create table if not exists USERS_ROLES (
 );
 
 create table if not exists ROLES_PRIVILEGES (
-   ID INT not null auto_increment,
+   ID int not null auto_increment,
    ROLE_ID int not null,
    PRIVILEGE_ID int not null,
    primary key(id),
