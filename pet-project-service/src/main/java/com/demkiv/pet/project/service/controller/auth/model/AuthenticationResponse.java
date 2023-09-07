@@ -1,4 +1,4 @@
-package com.demkiv.pet.project.service.controller.auth;
+package com.demkiv.pet.project.service.controller.auth.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

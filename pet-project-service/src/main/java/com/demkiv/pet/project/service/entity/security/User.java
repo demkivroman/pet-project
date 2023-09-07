@@ -6,7 +6,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
@@ -34,10 +36,18 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
+        final String rolePrefix = "ROLE_";
+        final String privilegePrefix = "_PRIVILEGE";
+        Collection<GrantedAuthority> authorities;
+        authorities = this.roles.stream()
                 .map(Role::getName)
+                .map(role -> rolePrefix + role)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+
+
+
+        return authorities;
     }
 
     @Override

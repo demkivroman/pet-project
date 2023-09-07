@@ -26,7 +26,7 @@ public class SecurityConfigBeans {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found."));
     }
 
-    @Bean
+    @Bean("internalProvider")
     @Transactional
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();

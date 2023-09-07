@@ -1,6 +1,9 @@
 package com.demkiv.pet.project.service.controller.auth;
 
+import com.demkiv.pet.project.service.controller.auth.model.AuthenticationRequest;
+import com.demkiv.pet.project.service.controller.auth.model.AuthenticationResponse;
 import com.demkiv.pet.project.service.controller.auth.model.RegisterRequest;
+import com.demkiv.pet.project.service.service.security.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

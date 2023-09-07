@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @AllArgsConstructor
 public class SecurityConfiguration {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final AuthenticationProvider provider;
+    private final AuthenticationProvider internalProvider;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -32,13 +32,13 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "api/add/employee")
                         .hasRole("ADMIN")
                         .requestMatchers("api/all/employees")
-                        .hasAuthority("READ_PRIVILEGE")
+                        .hasAuthority("READ")
                         .requestMatchers("api/update/employee")
-                        .hasAuthority("WRITE_PRIVILEGE")
+                        .hasAuthority("WRITE")
                         .requestMatchers("api/delete/employee")
-                        .hasAuthority("DELETE_PRIVILEGE")
+                        .hasAuthority("DELETE")
                         .anyRequest().authenticated())
-                .authenticationProvider(provider)
+                .authenticationProvider(internalProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
                 .formLogin()
