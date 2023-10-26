@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,7 +20,7 @@ import java.util.function.Function;
 public class JwtService {
     @Value("${jwt.key.signature}")
     private String SECRET_KEY;
-    @Value("${jwt.token.expiration.minutes}")
+    @Value("${jwt.token.expiration.minutes")
     private String JWT_TOKEN_EXPIRATION;
 
     public String extractUsername(String jwtToken) {
@@ -37,9 +36,7 @@ public class JwtService {
         return generateJwtToken(new HashMap<>(), userDetails);
     }
 
-    public String generateJwtToken(
-            Map<String, Object> extraClaims,
-            UserDetails userDetails) {
+    public String generateJwtToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)

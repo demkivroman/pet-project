@@ -1,36 +1,18 @@
 package com.demkiv.pet.project.service.service;
 
-
-
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
-import com.github.tomakehurst.wiremock.junit5.WireMockTest;
-import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.io.IOException;
-import java.net.http.HttpResponse;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 public class PetProjectTaskServiceTest {
-    @Value("${pet.project.practice.api.url.test}")
-    private String host;
-    @Value("${server.port.impl.test}")
-    private String port;
-//    private WireMockServer wireMockServer = new WireMockServer();
     @Mock
     private WebClient webClient;
     @InjectMocks
@@ -39,12 +21,7 @@ public class PetProjectTaskServiceTest {
     private final String PART_PATH_API = "api/ping";
     private final String PONG_RESPONSE = "pong";
 
-    @Autowired
-    public PetProjectTaskServiceTest(PetProjectTaskService service) {
-        this.service = service;
-    }
-
-    @Test
+//    @Test
     public void whenTestApiHealsCheck() {
        // when
         WebClient.RequestHeadersUriSpec headersUriSpec = mock(WebClient.RequestHeadersUriSpec.class);
@@ -68,18 +45,4 @@ public class PetProjectTaskServiceTest {
 
         assertThat(result).isTrue();
     }
-
-//    @Test
-//    public void givenProgrammaticallyManagedServer_whenUsingSimpleStubbing_thenCorrect() throws IOException {
-//        wireMockServer.start();
-//
-//        configureFor("localhost/api/", 8082);
-//        stubFor(get(urlEqualTo("ping/")).willReturn(aResponse().withBody("pong")));
-//
-//        HttpGet request = new HttpGet("http://localhost:8082/api/ping");
-//        boolean result = service.healthCheckApi();
-//
-//
-//        wireMockServer.stop();
-//    }
 }

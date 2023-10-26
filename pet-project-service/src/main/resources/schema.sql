@@ -1,9 +1,3 @@
--- drop table EMPLOYEE;
--- drop table USERS_ROLES;
--- drop table ROLES_PRIVILEGES;
--- drop table PRIVILEGE;
--- drop table role;
--- drop table _USER;
 
 create table if not exists EMPLOYEE (
     ID varchar(100) not null,

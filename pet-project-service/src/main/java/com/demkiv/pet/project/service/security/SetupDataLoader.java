@@ -7,35 +7,27 @@ import com.demkiv.pet.project.service.repository.security.PrivilegeRepository;
 import com.demkiv.pet.project.service.repository.security.RoleRepository;
 import com.demkiv.pet.project.service.repository.security.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 @Slf4j
+@RequiredArgsConstructor
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent>, AuthorityInterface {
     boolean alreadySetup = false;
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    private PrivilegeRepository privilegeRepository;
-
-    public SetupDataLoader(UserRepository userRepository,
-                           RoleRepository roleRepository,
-                           PrivilegeRepository privilegeRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.privilegeRepository = privilegeRepository;
-    }
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PrivilegeRepository privilegeRepository;
 
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        log.debug("=========  ON APPLICATION EVENT  =============");
+        log.info("=========  ON APPLICATION EVENT  =============");
         if (alreadySetup) {
             return;
         }

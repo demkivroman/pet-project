@@ -1,6 +1,8 @@
 package com.demkiv.pet.project.service.security;
 
 
+import com.demkiv.pet.project.service.repository.security.PrivilegeRepository;
+import com.demkiv.pet.project.service.repository.security.RoleRepository;
 import com.demkiv.pet.project.service.repository.security.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +20,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfigBeans {
-    private final UserRepository repository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PrivilegeRepository privilegeRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> repository.findByName(username)
+        return username -> userRepository.findByName(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found."));
     }
 
@@ -43,5 +47,9 @@ public class SecurityConfigBeans {
     @Bean
     public AuthenticationManager authManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
+    }
+
+    public SetupDataLoader setupDataLoaderForUserPermissions() {
+        return new SetupDataLoader(userRepository, roleRepository, privilegeRepository);
     }
 }

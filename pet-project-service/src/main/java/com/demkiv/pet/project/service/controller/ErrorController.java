@@ -1,6 +1,7 @@
 package com.demkiv.pet.project.service.controller;
 
 import com.demkiv.pet.project.service.util.PetProjectServiceException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @ControllerAdvice
 public class ErrorController extends ResponseEntityExceptionHandler {
 
