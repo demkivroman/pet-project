@@ -20,7 +20,7 @@ import java.util.function.Function;
 public class JwtService {
     @Value("${jwt.key.signature}")
     private String SECRET_KEY;
-    @Value("${jwt.token.expiration.minutes")
+    @Value("${jwt.token.expiration.minutes}")
     private String JWT_TOKEN_EXPIRATION;
 
     public String extractUsername(String jwtToken) {
@@ -33,7 +33,9 @@ public class JwtService {
     }
 
     public String generateJwtToken(UserDetails userDetails) {
-        return generateJwtToken(new HashMap<>(), userDetails);
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("scope", "pet-project");
+        return generateJwtToken(extraClaims, userDetails);
     }
 
     public String generateJwtToken(Map<String, Object> extraClaims, UserDetails userDetails) {
