@@ -15,7 +15,7 @@ public class Role {
     @ManyToMany(mappedBy = "roles")
     private Collection<User> users;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "roles_privileges",
             joinColumns = @JoinColumn(

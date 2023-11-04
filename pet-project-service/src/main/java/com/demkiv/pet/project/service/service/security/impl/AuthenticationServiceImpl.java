@@ -7,11 +7,9 @@ import com.demkiv.pet.project.service.controller.auth.model.RegisterRequest;
 import com.demkiv.pet.project.service.entity.security.Privilege;
 import com.demkiv.pet.project.service.entity.security.Role;
 import com.demkiv.pet.project.service.entity.security.User;
-import com.demkiv.pet.project.service.repository.security.PrivilegeRepository;
-import com.demkiv.pet.project.service.repository.security.RoleRepository;
-import com.demkiv.pet.project.service.repository.security.UserRepository;
 import com.demkiv.pet.project.service.security.JwtService;
 import com.demkiv.pet.project.service.service.security.AuthenticationService;
+import com.demkiv.pet.project.service.service.security.AuthoritiesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,9 +24,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
-    private final UserRepository userRepository;
-    private final PrivilegeRepository privilegeRepository;
-    private final RoleRepository roleRepository;
+    private final AuthoritiesService authenticationService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
@@ -41,14 +37,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .map(this::createAndSavePrivilege)
                 .collect(Collectors.toList()));
         role.setName(request.getRole().getName());
-        roleRepository.save(role);
-        log.info(String.format("Role %s is saved to database.", role));
         User user = new User();
         user.setName(request.getName());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRoles(List.of(role));
-        userRepository.save(user);
-        log.info(String.format("User %s is saved to database.", user));
+        authenticationService.saveUser(user);
         String jwtToken = jwtService.generateJwtToken(user);
 
         return AuthenticationResponse.builder()
@@ -60,8 +53,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getName(), request.getPassword()));
 
-        var user = userRepository.findByName(request.getName())
-                .orElseThrow();
+        var user = authenticationService.findUser(request.getName());
         var jwtToken = jwtService.generateJwtToken(user);
         return AuthenticationResponse.builder()
                 .jwtToken(jwtToken)
@@ -71,8 +63,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private Privilege createAndSavePrivilege(String name) {
         Privilege privilege = new Privilege();
         privilege.setName(name);
-        privilegeRepository.save(privilege);
-        log.info(String.format("Privilege %s is saved to database.", privilege));
         return  privilege;
     }
 }
