@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS EMPLOYEE;
+DROP TABLE IF EXISTS ROLES_PRIVILEGES;
+DROP TABLE IF EXISTS USERS_ROLES;
+DROP TABLE IF EXISTS PRIVILEGE;
+DROP TABLE IF EXISTS ROLE;
+DROP TABLE IF EXISTS USER;
 
 create table if not exists EMPLOYEE (
     ID varchar(100) not null,
@@ -21,13 +27,13 @@ create table if not exists USER (
 );
 
 create table if not exists ROLE (
-    ID int not null auto_increment,
+    ID int not null,
     name varchar(100) not null,
     primary key(id)
 );
 
 create table if not exists PRIVILEGE (
-    ID int not null auto_increment,
+    ID int not null,
     NAME varchar(100) not null,
     PRIMARY KEY (ID)
 );

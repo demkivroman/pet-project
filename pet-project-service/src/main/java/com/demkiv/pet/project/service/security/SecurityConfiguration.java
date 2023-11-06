@@ -30,7 +30,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/auth/**")
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, "api/add/employee")
-                        .hasRole("ADMIN")
+                        .hasAuthority("WRITE")
                         .requestMatchers("api/all/employees")
                         .hasAuthority("READ")
                         .requestMatchers("api/update/employee")
