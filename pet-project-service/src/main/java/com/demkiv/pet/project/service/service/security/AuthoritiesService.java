@@ -9,4 +9,5 @@ public interface AuthoritiesService {
     void saveRole(Role role);
     void savePrivilege(Privilege privilege);
     User findUser(String user);
+    Role findRoleByName(String roleName);
 }

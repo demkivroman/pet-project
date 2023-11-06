@@ -14,5 +14,4 @@ public class RegisterRequest {
     private String name;
     private String password;
     private RoleModel role;
-    private List<PrivilegeModel> privileges;
 }

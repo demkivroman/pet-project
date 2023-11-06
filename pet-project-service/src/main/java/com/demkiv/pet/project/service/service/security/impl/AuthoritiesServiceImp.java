@@ -44,4 +44,9 @@ public class AuthoritiesServiceImp implements AuthoritiesService {
         return userRepository.findByName(user)
                 .orElseThrow();
     }
+
+    @Override
+    public Role findRoleByName(String roleName) {
+        return roleRepository.findByNameNative(roleName);
+    }
 }

@@ -30,13 +30,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
 
     public AuthenticationResponse register(RegisterRequest request) {
-        Role role = new Role();
-        role.setPrivileges(request.getPrivileges()
-                .stream()
-                .map(PrivilegeModel::getName)
-                .map(this::createAndSavePrivilege)
-                .collect(Collectors.toList()));
-        role.setName(request.getRole().getName());
+//        role.setPrivileges(request.getPrivileges()
+//                .stream()
+//                .map(PrivilegeModel::getName)
+//                .map(this::createAndSavePrivilege)
+//                .collect(Collectors.toList()));
+//        role.setName(request.getRole().getName());
+        log.debug("before getting role ");
+        Role role = authenticationService.findRoleByName(request.getRole().getName());
+        log.debug("role " + role);
         User user = new User();
         user.setName(request.getName());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
