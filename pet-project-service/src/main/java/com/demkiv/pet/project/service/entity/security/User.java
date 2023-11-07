@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
@@ -22,32 +23,15 @@ public class User implements UserDetails {
     private String name;
     @Column(name = "password")
     private String password;
-
-    @ManyToMany
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(
-                    name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "role_id", referencedColumnName = "id"))
-    private Collection<Role> roles;
+    @OneToMany(mappedBy="user")
+    List<UserAuthorities> authorities;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> authorities = this.roles.stream()
-                .map(Role::getName)
-                .map(role -> "ROLE_" + role)
+        return this.authorities.stream()
+                .map(UserAuthorities::getName)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-
-        authorities.addAll(this.roles.stream()
-                .map(Role::getPrivileges)
-                .flatMap(Collection::stream)
-                .map(Privilege::getName)
-                .map(SimpleGrantedAuthority::new)
-                .toList());
-
-        return authorities;
     }
 
     @Override
