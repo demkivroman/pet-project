@@ -1,6 +1,7 @@
 package com.demkiv.pet.project.service.service.security.impl;
 
 import com.demkiv.pet.project.service.entity.security.User;
+import com.demkiv.pet.project.service.entity.security.UserAuthorities;
 import com.demkiv.pet.project.service.repository.security.RolePrivilegeRepository;
 import com.demkiv.pet.project.service.repository.security.UserRepository;
 import com.demkiv.pet.project.service.service.security.AuthoritiesService;
@@ -34,5 +35,10 @@ public class AuthoritiesServiceImp implements AuthoritiesService {
     @Override
     public List<String> getAllPrivilegesByRoleName(String roleName) {
         return rolePrivilegeRepository.getAllPrivilegesByRoleName(roleName);
+    }
+
+    @Override
+    public void saveUserAuthority(UserAuthorities authorities, User user) {
+        authorities.setUser(user);
     }
 }

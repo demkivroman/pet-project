@@ -1,9 +1,9 @@
-DROP TABLE IF EXISTS EMPLOYEE;
+-- DROP TABLE IF EXISTS EMPLOYEE;
 DROP TABLE IF EXISTS ROLES_PRIVILEGES;
-DROP TABLE IF EXISTS USERS_ROLES;
-DROP TABLE IF EXISTS PRIVILEGE;
 DROP TABLE IF EXISTS ROLE;
-DROP TABLE IF EXISTS USER;
+DROP TABLE IF EXISTS PRIVILEGE;
+-- DROP TABLE IF EXISTS USER;
+-- DROP TABLE IF EXISTS uAuthority;
 
 create table if not exists EMPLOYEE (
     ID varchar(100) not null,
@@ -17,14 +17,22 @@ create table if not exists EMPLOYEE (
     PRIMARY KEY ( ID )
 );
 
-create table if not exists USER (
-    ID int not null auto_increment,
-    name varchar(200) not null,
-    password varchar(200) not null,
-    token varchar(100),
-    PRIMARY KEY (ID),
-    UNIQUE (name, password, token)
-);
+-- create table if not exists USER (
+--     ID int not null auto_increment,
+--     name varchar(200) not null,
+--     password varchar(200) not null,
+--     PRIMARY KEY (ID),
+--     UNIQUE (name, password)
+-- );
+--
+-- create table if not exists u_Authority (
+--     id int not null auto_increment,
+--     name varchar(200) not null,
+--     user_id int not null,
+--     primary key(id),
+--     FOREIGN KEY (user_id) REFERENCES USER(id),
+--     UNIQUE (id, user_id)
+-- );
 
 create table if not exists ROLE (
     ID int not null,
@@ -36,16 +44,6 @@ create table if not exists PRIVILEGE (
     ID int not null,
     NAME varchar(100) not null,
     PRIMARY KEY (ID)
-);
-
-create table if not exists USERS_ROLES (
-    ID int not null auto_increment,
-    USER_ID int not null,
-    ROLE_ID int not null,
-    primary key(id),
-    FOREIGN KEY (USER_ID) REFERENCES USER(ID),
-    FOREIGN KEY (ROLE_ID) REFERENCES ROLE(ID),
-    UNIQUE (USER_ID, ROLE_ID)
 );
 
 create table if not exists ROLES_PRIVILEGES (

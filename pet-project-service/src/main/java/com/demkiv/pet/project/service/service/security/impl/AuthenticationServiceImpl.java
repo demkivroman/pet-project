@@ -34,7 +34,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = new User();
         user.setName(request.getName());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setAuthorities(userAuthorities);
+        userAuthorities.forEach(user::addUserAuthority);
         authenticationService.saveUser(user);
         String jwtToken = jwtService.generateJwtToken(user);
 
