@@ -1,9 +1,11 @@
--- DROP TABLE IF EXISTS EMPLOYEE;
+DROP TABLE IF EXISTS EMPLOYEE;
 DROP TABLE IF EXISTS ROLES_PRIVILEGES;
 DROP TABLE IF EXISTS ROLE;
 DROP TABLE IF EXISTS PRIVILEGE;
--- DROP TABLE IF EXISTS USER;
--- DROP TABLE IF EXISTS uAuthority;
+DROP TABLE IF EXISTS u_Authority;
+DROP TABLE IF EXISTS USER;
+DROP TABLE IF EXISTS USER_SEQ;
+DROP TABLE IF EXISTS u_Authority_SEQ;
 
 create table if not exists EMPLOYEE (
     ID varchar(100) not null,
@@ -17,22 +19,30 @@ create table if not exists EMPLOYEE (
     PRIMARY KEY ( ID )
 );
 
--- create table if not exists USER (
---     ID int not null auto_increment,
---     name varchar(200) not null,
---     password varchar(200) not null,
---     PRIMARY KEY (ID),
---     UNIQUE (name, password)
--- );
---
--- create table if not exists u_Authority (
---     id int not null auto_increment,
---     name varchar(200) not null,
---     user_id int not null,
---     primary key(id),
---     FOREIGN KEY (user_id) REFERENCES USER(id),
---     UNIQUE (id, user_id)
--- );
+create table if not exists USER (
+    ID int not null auto_increment,
+    name varchar(200) not null,
+    password varchar(200) not null,
+    PRIMARY KEY (ID),
+    UNIQUE (name, password)
+);
+
+create table if not exists USER_SEQ (
+    next_val bigint not null
+);
+
+create table if not exists u_Authority (
+    id int not null auto_increment,
+    name varchar(200) not null,
+    user_id int not null,
+    primary key(id),
+    FOREIGN KEY (user_id) REFERENCES USER(id),
+    UNIQUE (id, user_id)
+);
+
+create table if not exists u_Authority_SEQ (
+    next_val bigint not null
+);
 
 create table if not exists ROLE (
     ID int not null,

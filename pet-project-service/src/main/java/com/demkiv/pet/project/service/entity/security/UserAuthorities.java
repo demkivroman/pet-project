@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
-@Entity
+@Entity(name = "u_Authority")
+@Table(name = "u_Authority")
 public class UserAuthorities {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

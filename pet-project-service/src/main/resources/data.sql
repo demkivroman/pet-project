@@ -1,3 +1,6 @@
+INSERT INTO USER_SEQ (next_val) VALUES (50);
+INSERT INTO u_Authority_SEQ (next_val) VALUES (50);
+
 INSERT INTO ROLE (id, name) VALUES (1, 'ADMIN');
 INSERT INTO ROLE (id, name) VALUES (2, 'USER');
 INSERT INTO ROLE (id, name) VALUES (3, 'PET_USER');
