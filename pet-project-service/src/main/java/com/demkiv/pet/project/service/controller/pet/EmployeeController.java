@@ -27,7 +27,7 @@ public class EmployeeController {
     public ResponseEntity<ResponseEnum> addEmployee(@RequestBody @Valid Employee employee) {
         service.saveEmployee(employee);
         log.debug("Employee is saved. Id - " + employee.getId());
-        return ResponseEntity.of(Optional.of(ADDED));
+        return ResponseEntity.of(Optional.of(SUCCESS));
     }
 
     @GetMapping(value = "api/all/employees",
@@ -43,13 +43,13 @@ public class EmployeeController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseEnum> updateEmployee(@Valid @RequestBody Employee employee) {
         service.updateEmployee(employee);
-        return ResponseEntity.of(Optional.of(UPDATED));
+        return ResponseEntity.of(Optional.of(SUCCESS));
     }
 
     @PostMapping(value = "api/delete/employee")
     public ResponseEntity<ResponseEnum> deleteEmployee(@RequestParam String id) {
         service.deleteEmployee(id);
         log.debug(String.format("Employee with id - %s is deleted from database", id));
-        return ResponseEntity.of(Optional.of(DELETED));
+        return ResponseEntity.of(Optional.of(SUCCESS));
     }
 }

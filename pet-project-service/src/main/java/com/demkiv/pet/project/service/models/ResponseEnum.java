@@ -4,5 +4,6 @@ public enum ResponseEnum {
     ADDED,
     UPDATED,
     DELETED,
-    LIST_ALL
+    LIST_ALL,
+    SUCCESS
 }

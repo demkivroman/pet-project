@@ -14,7 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan("com.demkiv.pet.project.service.security")
+//@ComponentScan("com.demkiv.pet.project.service.security")
 @AllArgsConstructor
 public class SecurityConfiguration {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
