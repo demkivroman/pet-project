@@ -1,89 +1,178 @@
 package com.demkiv.pet.project.service.controller.pet;
 
-import com.demkiv.pet.project.service.controller.auth.AuthenticationController;
-import com.demkiv.pet.project.service.controller.auth.model.RegisterRequest;
-import com.demkiv.pet.project.service.controller.auth.model.RoleModel;
-import com.demkiv.pet.project.service.security.SecurityConfigBeans;
-import com.demkiv.pet.project.service.security.SecurityConfiguration;
-import com.demkiv.pet.project.service.service.pet.EmployeeService;
-import com.demkiv.pet.project.service.service.security.AuthenticationService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
-@WebAppConfiguration
+@SpringBootTest
 public class EmployeeControllerSecurityTest {
-//    @Mock
-//    private SecurityConfiguration securityConfiguration;
-    @Mock
-    private AuthenticationService service;
-    @InjectMocks
-    private AuthenticationController controller;
-    private MockMvc mvc;
-    private ObjectMapper mapper;
+
+    @Autowired
+    private WebApplicationContext wac;
+
+    private MockMvc mockMvc;
 
     @BeforeEach
     public void setup() {
-        mvc = MockMvcBuilders
-                .standaloneSetup(controller)
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(wac)
+                .alwaysDo(print())
+                .apply(springSecurity())
                 .build();
-        this.mapper = new ObjectMapper();
     }
 
+    @WithMockUser(authorities = { "WRITE" })
     @Test
-    @SneakyThrows
-    public void whenPingStatus_shouldReturnPong() {
+    public void whenCheckWRITEAuthority_shouldBeAbleToAddEmployee() throws Exception {
         // given
-
-        String uri = "/api/v1/auth/ping";
+        final String uri = "/api/add/employee";
+        String testEmployee = getTestEmployee();
 
         // when
+        ResultActions actions = mockMvc.perform(post(uri)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(testEmployee));
+
         // then
-        mvc.perform(get(uri)).andExpect(status().isOk());
+        actions.andExpect(status().isOk());
+    }
+
+    @WithMockUser(authorities = { "READ", "DELETE" })
+    @Test
+    public void whenCheckReadOrDELETEAuthority_shouldNotBeAuthorizedToAddEmployee() throws Exception {
+        // given
+        final String uri = "/api/add/employee";
+        String testEmployee = getTestEmployee();
+
+        // when
+        ResultActions actions = mockMvc.perform(post(uri)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(testEmployee));
+
+        // then
+        actions.andExpect(status().isForbidden());
+    }
+
+    @WithMockUser(authorities = { "READ" })
+    @Test
+    public void whenCheckReadAuthority_shouldBeAbleToGetAllEmployees() throws Exception {
+        // given
+        final String uri = "/api/all/employees";
+
+        // when
+        ResultActions actions = mockMvc.perform(get(uri)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andExpect(status().isOk());
     }
 
     @Test
-//    @WithMockUser(username = "testUser")
-    public void whenCheckThatRegistrationApi_shouldBePermittedAndReturn200() throws Exception {
+    public void whenCheckMissedReadAuthority_shouldNotBeAbleToGetAllEmployees() throws Exception {
         // given
-        RoleModel role = RoleModel.builder().name("TEST_ROLE").build();
-        RegisterRequest registerRequest = RegisterRequest.builder()
-                .role(role)
-                .name("testUserName")
-                .password("testUserPassword")
-                .build();
-        String uri = "/api/v1/auth/register";
-        System.out.println(mapper.writeValueAsString(registerRequest));
+        final String uri = "/api/all/employees";
 
-        mvc.perform(post(uri).param("request", mapper.writeValueAsString(registerRequest)))
-                .andExpect(status().isOk());
+        // when
+        ResultActions actions = mockMvc.perform(get(uri)
+                .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        actions.andExpect(status().isForbidden());
     }
 
+    @WithMockUser(authorities = { "WRITE" })
+    @Test
+    public void whenCheckWriteAuthority_shouldBeAbleUpdateEmployee() throws Exception {
+        // given
+        final String uri = "/api/update/employee";
+        String testEmployee = """
+                {
+                  "id": "testEmpId",
+                  "name": "testEmpName",
+                  "firstName": "testEmpFirstName",
+                  "birthDate": "1987-04-06",
+                  "position": "testPosition",
+                  "salary": 100,
+                  "experience": 1,
+                  "email": "test.email@emp.com"
+                }""";
+
+        // when
+        ResultActions actions = mockMvc.perform(post(uri)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(testEmployee));
+
+        // then
+        actions.andExpect(status().isOk());
+    }
+
+    @Test
+    public void whenCheckMissedWriteAuthority_shouldNotBeAbleUpdateEmployee() throws Exception {
+        // given
+        final String uri = "/api/update/employee";
+        String testEmployee = """
+                {
+                  "id": "testEmpId",
+                  "name": "testEmpName",
+                  "firstName": "testEmpFirstName",
+                  "birthDate": "1987-04-06",
+                  "position": "testPosition",
+                  "salary": 100,
+                  "experience": 1,
+                  "email": "test.email@emp.com"
+                }""";
+
+        // when
+        ResultActions actions = mockMvc.perform(post(uri)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(testEmployee));
+
+        // then
+        actions.andExpect(status().isForbidden());
+    }
+
+//    @WithMockUser(authorities = { "DELETE" })
 //    @Test
-//    @WithMockUser(username = "testUser", authorities = {"READ"})
-//    public void givenAuthRequestOnPrivateService_shouldSucceedWith200() throws Exception {
-//        mvc.perform(get("/api/all/employee").contentType(MediaType.APPLICATION_JSON_VALUE))
-//                .andExpect(status().isOk());
-//    }
+    public void whenCheckDeleteAuthority_shouldBeAbleDeleteEmployee() throws Exception {
+        // given
+        final String uri = "/api/delete/employee";
+        String testId = "testId";
+
+        // when
+        ResultActions actions = mockMvc.perform(post(uri)
+                .accept(MediaType.APPLICATION_JSON)
+                .queryParam("id", testId));
+
+        // then
+        actions.andExpect(status().isOk());
+    }
+
+    private String getTestEmployee() {
+        return """
+                {
+                  "name": "testEmpName",
+                  "firstName": "testEmpFirstName",
+                  "birthDate": "1987-04-06",
+                  "position": "testPosition",
+                  "salary": 100,
+                  "experience": 1,
+                  "email": "test.email@emp.com"
+                }""";
+    }
 }
