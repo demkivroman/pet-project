@@ -1,9 +1,11 @@
 package com.demkiv.pet.project.service.controller.pet;
 
+import com.demkiv.pet.project.service.service.pet.EmployeeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,12 +18,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import static org.mockito.BDDMockito.willDoNothing;
+
 @SpringBootTest
 public class EmployeeControllerSecurityTest {
 
+    @MockBean
+    private EmployeeService service;
     @Autowired
-    private WebApplicationContext wac;
-
+    WebApplicationContext wac;
     private MockMvc mockMvc;
 
     @BeforeEach
@@ -147,12 +152,13 @@ public class EmployeeControllerSecurityTest {
         actions.andExpect(status().isForbidden());
     }
 
-//    @WithMockUser(authorities = { "DELETE" })
-//    @Test
+    @WithMockUser(authorities = { "DELETE" })
+    @Test
     public void whenCheckDeleteAuthority_shouldBeAbleDeleteEmployee() throws Exception {
         // given
         final String uri = "/api/delete/employee";
         String testId = "testId";
+        willDoNothing().given(service).deleteEmployee(testId);
 
         // when
         ResultActions actions = mockMvc.perform(post(uri)
@@ -161,6 +167,22 @@ public class EmployeeControllerSecurityTest {
 
         // then
         actions.andExpect(status().isOk());
+    }
+
+    @Test
+    public void whenCheckMissedDeleteAuthority_shouldNotBeAbleDeleteEmployee() throws Exception {
+        // given
+        final String uri = "/api/delete/employee";
+        String testId = "testId";
+        willDoNothing().given(service).deleteEmployee(testId);
+
+        // when
+        ResultActions actions = mockMvc.perform(post(uri)
+                .accept(MediaType.APPLICATION_JSON)
+                .queryParam("id", testId));
+
+        // then
+        actions.andExpect(status().isForbidden());
     }
 
     private String getTestEmployee() {
