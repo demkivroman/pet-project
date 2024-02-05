@@ -4,6 +4,7 @@ import com.demkiv.pet.project.service.controller.auth.model.AuthenticationReques
 import com.demkiv.pet.project.service.controller.auth.model.AuthenticationResponse;
 import com.demkiv.pet.project.service.controller.auth.model.RegisterRequest;
 import com.demkiv.pet.project.service.service.security.AuthenticationService;
+import com.demkiv.pet.project.service.util.PetProjectServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,12 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
-        log.debug("RegisterRequest " + request);
-        return ResponseEntity.ok(service.register(request));
+        try {
+            log.debug("RegisterRequest " + request);
+            return ResponseEntity.ok(service.register(request));
+        } catch (Exception exception) {
+            throw new PetProjectServiceException(exception.getCause().getCause().getMessage());
+        }
     }
 
     @PostMapping("/authenticate")

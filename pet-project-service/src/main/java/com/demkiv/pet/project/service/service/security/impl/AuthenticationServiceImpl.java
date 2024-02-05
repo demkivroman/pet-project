@@ -46,6 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getName(), request.getPassword()));
+        log.debug("User {} is authenticated.", request.getName());
 
         var user = authenticationService.findUser(request.getName());
         var jwtToken = jwtService.generateJwtToken(user);

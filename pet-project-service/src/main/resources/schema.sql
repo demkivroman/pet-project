@@ -21,8 +21,8 @@ create table if not exists petdb.EMPLOYEE (
 
 create table if not exists petdb.USER (
     ID int not null auto_increment,
-    name varchar(200) not null,
-    password varchar(200) not null,
+    name varchar(200) unique not null,
+    password varchar(200) unique not null,
     PRIMARY KEY (ID),
     UNIQUE (name, password)
 );
