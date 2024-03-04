@@ -66,9 +66,8 @@ public class AuthenticationControllerTest {
                 .name("testUserName")
                 .password("testUserPassword")
                 .build();
-        AuthenticationResponse response = AuthenticationResponse.builder().jwtToken("testToken").build();
         final String uri = "/api/v1/auth/register";
-        given(service.register(registerRequest)).willReturn(response);
+        given(service.register(registerRequest)).willReturn(true);
 
         // when
         ResultActions actions = mvc.perform(post(uri)

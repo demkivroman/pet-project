@@ -67,6 +67,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             log.debug(String.format("Employee with id - %s is updated. New employee is %s", employee.getId(), updatedEmployee));
             return Optional.of(updatedEmployee);
         }
-        return Optional.empty();
+
+        throw new PetProjectServiceException(String.format("Employee with id - %s is not found in DB.", employee.getId()));
     }
 }

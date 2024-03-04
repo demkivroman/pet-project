@@ -26,9 +26,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public boolean register(RegisterRequest request) {
         String roleName = request.getRole().getName();
         List<String> privileges = authenticationService.getAllPrivilegesByRoleName(roleName);
+        log.debug("Privileges list {} for user {}", privileges, request.getName());
         List<UserAuthorities> userAuthorities = convertToUserAuthorities(List.of(roleName), true);
         userAuthorities.addAll(convertToUserAuthorities(privileges, false));
         User user = new User();
@@ -36,12 +37,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userAuthorities.forEach(user::addUserAuthority);
         authenticationService.saveUser(user);
-        log.debug("{} is saved to data base.", user);
-        String jwtToken = jwtService.generateJwtToken(user);
-
-        return AuthenticationResponse.builder()
-                .jwtToken(jwtToken)
-                .build();
+        log.debug("{} is registered.", user);
+        return true;
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {

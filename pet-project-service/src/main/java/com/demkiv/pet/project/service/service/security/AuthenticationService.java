@@ -5,6 +5,6 @@ import com.demkiv.pet.project.service.controller.auth.model.AuthenticationRespon
 import com.demkiv.pet.project.service.controller.auth.model.RegisterRequest;
 
 public interface AuthenticationService {
-    AuthenticationResponse register(RegisterRequest request);
+    boolean register(RegisterRequest request);
     AuthenticationResponse authenticate(AuthenticationRequest request);
 }

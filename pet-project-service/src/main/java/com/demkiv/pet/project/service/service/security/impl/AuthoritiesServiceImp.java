@@ -23,7 +23,7 @@ public class AuthoritiesServiceImp implements AuthoritiesService {
     @Override
     public void saveUser(User user) {
         userRepository.save(user);
-        log.info(String.format("User %s is saved to database.", user));
+        log.debug(String.format("User %s is saved to database.", user));
     }
 
     @Override
