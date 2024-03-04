@@ -2,6 +2,7 @@ package com.demkiv.pet.project.service.entity.security;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Data
 @Builder
 @NoArgsConstructor
@@ -71,6 +73,7 @@ public class User implements UserDetails {
             authorities = new ArrayList<>();
         }
 
+        log.debug("Add user authority - {}", authority);
         authorities.add(authority);
         authority.setUser(this);
     }

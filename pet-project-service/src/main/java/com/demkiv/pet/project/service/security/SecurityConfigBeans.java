@@ -24,8 +24,11 @@ public class SecurityConfigBeans {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByName(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found."));
+        return username -> {
+            log.debug("From userDetailsService. Looking for user by name.");
+            return userRepository.findByName(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found."));
+        };
     }
 
     @Bean("internalProvider")
@@ -34,6 +37,7 @@ public class SecurityConfigBeans {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
+        log.debug("From authenticationProvider. Creating authenticationProvider.");
         return authProvider;
     }
 

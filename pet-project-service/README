@@ -1,2 +1,5 @@
 Launch swagger use:
   http://localhost:8081/swagger-ui/index.html
+
+Launch application from console.
+  mvn spring-boot:run

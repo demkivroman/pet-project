@@ -36,6 +36,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userAuthorities.forEach(user::addUserAuthority);
         authenticationService.saveUser(user);
+        log.debug("{} is saved to data base.", user);
         String jwtToken = jwtService.generateJwtToken(user);
 
         return AuthenticationResponse.builder()
