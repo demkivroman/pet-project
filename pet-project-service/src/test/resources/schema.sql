@@ -1,4 +1,4 @@
-# DROP TABLE IF EXISTS EMPLOYEE;
+DROP TABLE IF EXISTS EMPLOYEE;
 DROP TABLE IF EXISTS petdb_test.ROLES_PRIVILEGES;
 DROP TABLE IF EXISTS petdb_test.ROLE;
 DROP TABLE IF EXISTS petdb_test.PRIVILEGE;
@@ -7,17 +7,17 @@ DROP TABLE IF EXISTS petdb_test.USER;
 DROP TABLE IF EXISTS petdb_test.USER_SEQ;
 DROP TABLE IF EXISTS petdb_test.u_Authority_SEQ;
 
-# create table if not exists EMPLOYEE (
-#     ID varchar(100) not null,
-#     NAME varchar(100) not null,
-#     FIRSTNAME varchar(100) not null,
-#     BIRTHDATE date,
-#     POSITION varchar(100),
-#     SALARY float,
-#     EXPERIENCE float,
-#     EMAIL varchar(100) not null,
-#     PRIMARY KEY ( ID )
-# );
+create table if not exists EMPLOYEE (
+    ID varchar(100) not null,
+    NAME varchar(100) not null,
+    FIRSTNAME varchar(100) not null,
+    BIRTHDATE date,
+    POSITION varchar(100),
+    SALARY float,
+    EXPERIENCE float,
+    EMAIL varchar(100) not null,
+    PRIMARY KEY ( ID )
+);
 
 create table if not exists petdb_test.USER (
     ID int not null auto_increment,
