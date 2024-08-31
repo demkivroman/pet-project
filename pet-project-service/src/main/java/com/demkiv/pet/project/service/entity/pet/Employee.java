@@ -19,27 +19,36 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
     @NotNull(message = "Name cannot be null")
     @NotBlank
     @Size(min = 3, max = 200, message = "Name should be more the three characters")
     private String name;
+
     @Column(name = "firstname")
     @NotNull(message = "Firstname cannot be null")
     @NotBlank
     @Size(min = 3, max = 20, message = "FirstName should be more the three characters")
     private String firstName;
+
     @Column(name = "birthdate")
+    @Temporal(TemporalType.DATE)
     @Past
-    private Date birthDate;
+    private Date birthdate;
+
     @NotNull(message = "Position cannot be null")
     @NotBlank
     @Size(min = 3, max = 200, message = "Position should be more the three characters")
     private String position;
+
     @Positive
     private float salary;
+
     @PositiveOrZero
     private float experience;
+
     @NotNull
     @Email(message = "Email should be valid")
+    @Column(unique=true)
     private String email;
 }

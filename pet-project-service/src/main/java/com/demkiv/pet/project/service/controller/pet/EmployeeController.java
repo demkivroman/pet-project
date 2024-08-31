@@ -24,7 +24,7 @@ public class EmployeeController {
     @PostMapping(value = "api/add/employee",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseEnum> addEmployee(@RequestBody @Valid Employee employee) {
+    public ResponseEntity<ResponseEnum> addEmployee(@Valid @RequestBody Employee employee) {
         service.saveEmployee(employee);
         log.debug("Employee is saved. Id - " + employee.getId());
         return ResponseEntity.of(Optional.of(SUCCESS));
